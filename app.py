@@ -1,3 +1,12 @@
+"""
+Auteur : Moustapha NDIAYE
+Rôle   : Senior AI Developer @ Teranga AI
+Email  : infos@terangaai.com
+Date   : 19/09/2025
+Site   : https://terangaai.com
+Téléphone : +221 77 784 01 61
+Description : API FastAPI pour l'assistant vocal & chatbot Teranga AI
+"""
 from fastapi import FastAPI, UploadFile, File, Body, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 import io, re, base64, logging, gzip
