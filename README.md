@@ -105,6 +105,7 @@ Teranga-ai-Fast-Api-Assistant/
 Toujours utiliser HTTPS pour les applications mobiles
 
 Stocker la clé API Groq dans un fichier .env ou un secret manager
+# noté cette clé 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
 
 Limiter les tokens LLM pour réduire la latence et les coûts
 
