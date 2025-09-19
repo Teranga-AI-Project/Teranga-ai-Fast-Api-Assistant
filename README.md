@@ -64,11 +64,10 @@ Accéder à la documentation Swagger :
 http://localhost:8000/docs
 
 🔹 Docker
-Construire l’image Docker :
+# Construire l’image Docker
+docker build -t teranga-ai-fastapi-assistant.
 
-docker build -t teranga-ai-api .
 Lancer le conteneur :
-
 docker run -d -p 8000:8000 teranga-ai-api
 
 🔹 Déploiement sur VPS (exemple expert)
