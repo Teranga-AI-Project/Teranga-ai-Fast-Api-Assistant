@@ -7,3 +7,12 @@ requests
 whisper 
 groq 
 python-dotenv
+groq
+langdetect
+pydub
+SpeechRecognition
+gTTS
+python-dotenv
+fastapi==0.115.0 
+pydantic==2.9 
+uvicorn==0.30

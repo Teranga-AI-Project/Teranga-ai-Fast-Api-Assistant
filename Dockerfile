@@ -1,21 +1,22 @@
-# Base image
-FROM python:3.11-slim
+# Utiliser Python officiel comme base
+FROM python:3.9-slim
 
-# Set workdir
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le projet et installer les dépendances
-COPY . /app
-COPY requirements.txt /app/requirements.txt
+# Copier les fichiers nécessaires
+COPY requirements.txt ./
+COPY app.py ./
+COPY . .
+
+# Installer les dépendances
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Exposer le port FastAPI
 EXPOSE 8000
 
-# Définir la variable d'environnement (optionnel)
-# ENV GROQ_API_KEY=your_api_key_here
+# Définir la variable d'environnement (sera passée depuis .env)
+ENV GROQ_API_KEY=${GROQ_API_KEY}
 
-# Commande pour démarrer l’API
+# Commande pour lancer l'app (via uvicorn)
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
-# Utiliser un gestionnaire de processus comme Gunicorn pour la production
-# CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--bind", "0.0.0.0:8000"]
