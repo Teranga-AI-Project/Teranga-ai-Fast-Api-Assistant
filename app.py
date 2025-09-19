@@ -16,7 +16,9 @@ from pydub import AudioSegment
 import speech_recognition as sr
 from gtts import gTTS
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
+from typing import Optional
+from pydantic import BaseModel
 
 # ---------------- Logging ---------------- #
 logging.basicConfig(level=logging.INFO)
@@ -25,8 +27,20 @@ logger = logging.getLogger(__name__)
 # Fix langdetect seed pour éviter des résultats aléatoires
 DetectorFactory.seed = 0
 
+
+
 # ---------------- FastAPI ---------------- #
 app = FastAPI(title="API Assistant Vocal & Chat Bot Teranga AI", version="1.0")
+
+# ==========================
+# Schémas Pydantic
+# ==========================
+class ChatRequest(BaseModel):
+    user_id: str
+    pre_prompt: str
+    message: Optional[str] = None  # Message optionnel
+    history: list[str] = []
+
 
 # ---------------- Client LLM ---------------- #
 # Utiliser la variable d'environnement GROQ_API_KEY
@@ -34,6 +48,8 @@ groq_api_key = os.environ.get("GROQ_API_KEY")
 if not groq_api_key:
     raise RuntimeError("La variable d'environnement GROQ_API_KEY n'est pas définie")
 client = Groq(api_key=groq_api_key)
+
+
 
 # ---------------- Fonctions utilitaires ---------------- #
 
@@ -106,6 +122,23 @@ def obtenir_reponse_llm(texte_prompt: str) -> str:
 def compress_base64(data: bytes) -> str:
     return base64.b64encode(gzip.compress(data)).decode()
 
+def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
+    """
+    Construit le prompt pour LLaMA.
+    L'humeur est fournie par l'utilisateur via l'interface.
+    """
+    hist = "\n".join(history[-5:])  # garder les 5 derniers échanges
+    prompt = (
+        f"{pre_prompt} "
+        f"Historique récent:\n{hist}\n\n"
+        f"Utilisateur: {message}\n"
+        f"Mentor:"
+    )
+    return prompt
+
+
+
+
 # ---------------- Endpoints ---------------- #
 
 @app.get("/")
@@ -113,22 +146,25 @@ def home():
     return {"message": "API Assistant Vocal & Chat Bot Teranga AI", "status": "active"}
 
 @app.post("/chat_text/")
-async def chat_text(message: str = Body(..., embed=True)):
-    reponse = obtenir_reponse_llm(message)
+async def chat_text(req: ChatRequest = Body(...)):
+    prompt = build_prompt(req.message, req.pre_prompt, req.history)
+    reponse = obtenir_reponse_llm(prompt)
     audio_tts = synthese_vocale(reponse)
     return JSONResponse({
-        "texte_utilisateur": message,
+        "texte_utilisateur": req.message,
         "reponse_assistant": reponse,
         "tts_audio_base64": compress_base64(audio_tts)
     })
 
 @app.post("/chat_audio/")
-async def chat_audio(file: UploadFile = File(...)):
+# async def chat_audio(file: UploadFile = File(...)):
+async def chat_audio(req: ChatRequest = Body(...), file: UploadFile = File(...)):
     audio_bytes = io.BytesIO(await file.read())
     texte_transcrit = transcrire_audio(audio_bytes)
     audio_origine_base64 = compress_base64(audio_bytes.getvalue())
 
-    reponse = obtenir_reponse_llm(texte_transcrit)
+    prompt = build_prompt(texte_transcrit, req.pre_prompt, req.history)
+    reponse = obtenir_reponse_llm(prompt)
     audio_tts = synthese_vocale(reponse)
 
     return JSONResponse({
@@ -139,7 +175,7 @@ async def chat_audio(file: UploadFile = File(...)):
     })
 
 @app.post("/tts/")
-async def tts_endpoint(message: str = Body(..., embed=True)):
+async def tts_endpoint(message: str = Body(...)):
     audio_tts = synthese_vocale(message)
     return StreamingResponse(io.BytesIO(audio_tts), media_type="audio/mpeg")
 

@@ -1,0 +1,14 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 60
+restartPolicyType = "ON_FAILURE"
+
+[environments]
+[environments.production]
+variables = { NODE_ENV = "production" }
+
+[environments.staging]
+variables = { NODE_ENV = "staging" }

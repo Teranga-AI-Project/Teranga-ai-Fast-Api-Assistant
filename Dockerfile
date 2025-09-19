@@ -1,4 +1,3 @@
-# Utiliser Python officiel comme base
 FROM python:3.9-slim
 
 # Définir le répertoire de travail
@@ -16,6 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Définir la variable d'environnement (sera passée depuis .env)
+ARG GROQ_API_KEY
 ENV GROQ_API_KEY=${GROQ_API_KEY}
 
 # Commande pour lancer l'app (via uvicorn)
