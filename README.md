@@ -114,5 +114,9 @@ Traiter les fichiers audio en mémoire pour accélérer STT/TTS
 Compresser les données Base64 pour réduire la bande passante mobile
 
 🔹 Contact
-Teranga AI – Senior AI Developer : Moustapha NDIAYE
-terangaai.com
+👨‍💻 Moustapha NDIAYE – Senior AI Developer @ Teranga AI
+🌐 Site web : terangaai.com
+📧 Email : infos@terangaai.com
+📞 Téléphone : +221 77 784 01 61
+
+
