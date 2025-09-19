@@ -62,6 +62,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 Accéder à la documentation Swagger :
 
 http://localhost:8000/docs
+
 🔹 Docker
 Construire l’image Docker :
 
@@ -69,6 +70,7 @@ docker build -t teranga-ai-api .
 Lancer le conteneur :
 
 docker run -d -p 8000:8000 teranga-ai-api
+
 🔹 Déploiement sur VPS (exemple expert)
 Installer Docker et Docker Compose sur le VPS
 
@@ -89,6 +91,7 @@ Chat vocal
 curl -X POST "https://api.terangaai.com/chat_audio/" \
 -H "Content-Type: multipart/form-data" \
 -F "file=@mon_audio.wav"
+
 🔹 Structure du projet
 Teranga-ai-Fast-Api-Assistant/
 │
@@ -98,6 +101,7 @@ Teranga-ai-Fast-Api-Assistant/
 ├─ .gitignore
 ├─ logo.png             # Logo de l'assistant
 └─ README.md
+
 🔹 Sécurité & Bonnes pratiques
 Toujours utiliser HTTPS pour les applications mobiles
 
