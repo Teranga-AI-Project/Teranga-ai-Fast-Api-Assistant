@@ -64,8 +64,6 @@ Accéder à la documentation Swagger :
 http://localhost:8000/docs
 
 🔹 Docker
-# Construire l’image Docker
-docker build -t teranga-ai-fastapi-assistant.
 
 Lancer le conteneur :
 docker run -p 8000:8000 --env-file .env teranga-ai-fastapi-assistant
