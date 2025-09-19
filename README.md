@@ -68,7 +68,7 @@ http://localhost:8000/docs
 docker build -t teranga-ai-fastapi-assistant.
 
 Lancer le conteneur :
-docker run -d -p 8000:8000 teranga-ai-api
+docker run -p 8000:8000 --env-file .env teranga-ai-fastapi-assistant
 
 🔹 Déploiement sur VPS (exemple expert)
 Installer Docker et Docker Compose sur le VPS
