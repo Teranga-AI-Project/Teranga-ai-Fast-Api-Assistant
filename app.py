@@ -150,7 +150,7 @@ def home():
 
 
 @app.get("/healthz")
-async def health_check():
+def health_check():
     """Health check pour Railway"""
     try:
         return {
