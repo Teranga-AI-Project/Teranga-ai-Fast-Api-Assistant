@@ -145,34 +145,14 @@ def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
 
 @app.get("/health")
 async def health_check():
-    """Health check optimisé pour Railway"""
+    """Health check pour Railway"""
     try:
-        start_time = time.time()
-        
-        # Test basic functionality
-        test_response = {"status": "healthy"}
-        
-        # Check system resources
-        memory_percent = psutil.virtual_memory().percent
-        cpu_percent = psutil.cpu_percent()
-        
-        # Check if system is under stress
-        if memory_percent > 90 or cpu_percent > 95:
-            raise HTTPException(status_code=503, detail="System under high load")
-        
-        response_time = time.time() - start_time
-        
         return {
             "status": "healthy",
             "timestamp": time.time(),
-            "response_time": response_time,
-            "memory_usage": f"{memory_percent}%",
-            "cpu_usage": f"{cpu_percent}%",
-            "services": {
-                "stt": "operational",
-                "tts": "operational", 
-                "llm": "operational"
-            }
+            "service": "Teranga AI FastAPI Assistant",
+            "version": "1.0.0",
+            "environment": os.getenv("ENVIRONMENT", "development")
         }
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Health check failed: {str(e)}")
