@@ -46,7 +46,7 @@ class ChatRequest(BaseModel):
 
 # ---------------- Client LLM ---------------- #
 # Utiliser la variable d'environnement GROQ_API_KEY
-groq_api_key = os.environ.get("GROQ_API_KEY")
+groq_api_key = os.getenv("GROQ_API_KEY")
 if not groq_api_key:
     raise RuntimeError("La variable d'environnement GROQ_API_KEY n'est pas définie")
 client = Groq(api_key=groq_api_key)
