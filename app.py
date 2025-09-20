@@ -149,7 +149,7 @@ def home():
     return {"message": "API Assistant Vocal & Chat Bot Teranga AI", "status": "active"}
 
 
-@app.get("/healthz")
+@app.get("/health")
 def health_check():
     """Health check pour Railway"""
     try:
