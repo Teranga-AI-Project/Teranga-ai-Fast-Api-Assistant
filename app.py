@@ -142,8 +142,14 @@ def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
 
 
 # ---------------- Endpoints ---------------- #
+    
 
-@app.get("/health")
+@app.get("/")
+def home():
+    return {"message": "API Assistant Vocal & Chat Bot Teranga AI", "status": "active"}
+
+
+@app.get("/healthz")
 async def health_check():
     """Health check pour Railway"""
     try:
@@ -156,11 +162,7 @@ async def health_check():
         }
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Health check failed: {str(e)}")
-    
 
-@app.get("/")
-def home():
-    return {"message": "API Assistant Vocal & Chat Bot Teranga AI", "status": "active"}
 
 @app.post("/chat_text/")
 async def chat_text(req: ChatRequest = Body(...)):
