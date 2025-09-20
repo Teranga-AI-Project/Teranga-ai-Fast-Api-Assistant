@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Exposer le port FastAPI
 EXPOSE 8000
 
+# Health check pour Railway
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
 
 # Commande pour lancer l'app (via uvicorn)
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
