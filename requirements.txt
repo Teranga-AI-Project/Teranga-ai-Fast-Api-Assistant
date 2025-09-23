@@ -1,19 +1,28 @@
 gradio 
+psutil
 openai 
 gtts 
-pydub 
 numpy 
 requests 
 whisper 
-groq 
-python-dotenv
 groq
 langdetect
 pydub
 SpeechRecognition
 gTTS
 python-dotenv
-fastapi==0.115.0 
 pydantic==2.9 
 uvicorn==0.30
-psutil
+fastapi
+sqlalchemy
+psycopg2-binary   # Driver PostgreSQL
+alembic           # Migration DB
+python-jose[cryptography]  # JWT
+passlib[bcrypt]   # Hashage mots de passe
+PyMySQL
+social-auth-core[openidconnect]
+python-jose>=3.0.0
+starlette
+fastapi-limiter 
+redis
+aioredis
