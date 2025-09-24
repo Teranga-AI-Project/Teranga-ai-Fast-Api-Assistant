@@ -5,4 +5,5 @@ __pycache__/
 *.pyd
 *.log
 .venv
+.venv_fastapi
 test.py

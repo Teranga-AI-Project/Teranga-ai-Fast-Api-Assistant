@@ -5,6 +5,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    token_version: int = 0
 
 class UserSchema(UserBase):
     id: int

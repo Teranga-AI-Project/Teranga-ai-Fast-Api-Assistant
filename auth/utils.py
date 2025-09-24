@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 # import argon2
 # from argon2 import PasswordHasher
-from users.models import RefreshToken
+from users.models import RefreshToken, User
 import os
 
 load_dotenv()
@@ -32,11 +32,12 @@ def verify_password(plain_password: str, encrypted_password: str) -> bool:
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    to_encode = data.copy()
+def create_access_token(data: dict, user: User, expires_delta: Optional[timedelta] = None) -> str:
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode = data.copy()
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return token, expire
 
 def create_refresh_token(db: Session, user_id: int) -> str:
     token = token_urlsafe(32)
@@ -60,6 +61,10 @@ def verify_refresh_token(db: Session, token: str):
     ).first()
     
     return refresh_token
+
+def invalidate_user_tokens(db: Session, user: User):
+    user.token_version += 1
+    db.commit()
 
 # Fonction de vérification de l'API Key
 async def verify_api_key(api_key: str = Security(api_key_header)):

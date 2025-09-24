@@ -7,18 +7,20 @@ from auth.utils import (
     get_password_hash, 
     create_access_token, 
     create_refresh_token,
+    invalidate_user_tokens,
     verify_refresh_token
 )
 from users.models import User
 from users.schemas import UserCreate, UserSchema
 from auth.models import LoginRequest
 from pydantic import BaseModel
-import logging
+from datetime import datetime
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
+    expires_at: datetime
     user: UserSchema
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -37,7 +39,9 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     db.query(RefreshToken).filter(RefreshToken.user_id == user.id).delete()
     db.commit()
     
-    access_token = create_access_token(data={"sub": user.email})
+    # Invalider les anciens access tokens en incrémentant token_version
+    invalidate_user_tokens(db, user)
+    access_token, expires_at = create_access_token(data={"sub": user.email}, user=user)
     refresh_token = create_refresh_token(db, user.id)
     
     user_schema = UserSchema.from_orm(user)
@@ -45,6 +49,7 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
+        expires_at=expires_at,
         token_type="bearer",
         user=user_schema
     )
@@ -66,8 +71,10 @@ async def refresh_token(
         )
         
     user = refresh_token.user
+    # Invalider les anciens access tokens en incrémentant token_version
+    invalidate_user_tokens(db, user)
     # Créer un nouveau access token
-    access_token = create_access_token(data={"sub": user.email})
+    access_token, expires_at = create_access_token(data={"sub": user.email}, user=user)
     # Créer un nouveau refresh token
     new_refresh_token = create_refresh_token(db, user.id)
     
@@ -80,6 +87,7 @@ async def refresh_token(
     return TokenResponse(
         access_token=access_token,
         refresh_token=new_refresh_token,
+        expires_at=expires_at,
         token_type="bearer",
         user=user_schema
     )
@@ -100,7 +108,9 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     
-    access_token = create_access_token(data={"sub": new_user.email})
+    # Invalider les anciens access tokens en incrémentant token_version
+    invalidate_user_tokens(db, user)
+    access_token, expires_at = create_access_token(data={"sub": new_user.email}, user=new_user)
     refresh_token = create_refresh_token(db, new_user.id)
     
     user_schema = UserSchema.from_orm(new_user)
@@ -108,6 +118,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
+        expires_at=expires_at,
         token_type="bearer",
         user=user_schema
     )
