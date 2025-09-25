@@ -4,5 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
-.env
-.env
+.venv
+.venv_fastapi
+test.py
+# app/
