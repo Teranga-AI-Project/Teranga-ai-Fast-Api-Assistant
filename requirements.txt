@@ -11,18 +11,17 @@ pydub
 SpeechRecognition
 gTTS
 python-dotenv
-pydantic==2.9 
-uvicorn==0.30
-fastapi
-sqlalchemy
-psycopg2-binary   # Driver PostgreSQL
-alembic           # Migration DB
-python-jose[cryptography]  # JWT
-passlib[bcrypt]   # Hashage mots de passe
-PyMySQL
-social-auth-core[openidconnect]
-python-jose>=3.0.0
-starlette
-fastapi-limiter 
-redis
-aioredis
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.13.1
+pydantic==2.5.2
+pydantic-settings==2.1.0
+pydantic[email]
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+httpx==0.25.2
+pytest==7.4.3
+pytest-asyncio==0.21.1
