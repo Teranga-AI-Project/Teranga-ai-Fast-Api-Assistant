@@ -106,7 +106,7 @@ class AutoApiKeyService:
         db.commit()
         
         # Log du renouvellement
-        from models.audit import AuditLog
+        from app.models.audit import AuditLog
         audit_log = AuditLog(
             user_id=user_id,
             api_key_id=new_db_key.id,
