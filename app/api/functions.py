@@ -93,7 +93,7 @@ def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
     Construit le prompt pour LLaMA.
     L'humeur est fournie par l'utilisateur via l'interface.
     """
-    hist = "\n".join(history[-5:])  # garder les 5 derniers échanges
+    hist = "\n".join(history[-10:])  # garder les 10 derniers échanges
     prompt = (
         f"{pre_prompt} "
         f"Historique récent:\n{hist}\n\n"
