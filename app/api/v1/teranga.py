@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body, UploadFile, File
+from fastapi import APIRouter, Depends, Body, UploadFile, File, Form
 from fastapi.responses import JSONResponse, StreamingResponse
 from groq import Groq
 # from sqlalchemy.orm import Session
@@ -63,7 +63,9 @@ async def chat_text(
 
 @router.post("/chat_audio")
 async def create_completion(
-    req: ChatRequest = Body(...), 
+    pre_prompt: str = Form(...),
+    history: str = Form(...),
+    user_id: str = Form(...),
     file: UploadFile = File(...),
     user_and_key: tuple[User, APIKey] = Depends(get_api_key_user),
     # db: Session = Depends(get_db)
@@ -78,7 +80,7 @@ async def create_completion(
     texte_transcrit = transcrire_audio(audio_bytes)
     audio_origine_base64 = compress_base64(audio_bytes.getvalue())
 
-    prompt = build_prompt(texte_transcrit, req.pre_prompt, req.history)
+    prompt = build_prompt(texte_transcrit, pre_prompt, history)
     reponse = obtenir_reponse_llm(prompt, client)
     audio_tts = synthese_vocale(reponse)
 
