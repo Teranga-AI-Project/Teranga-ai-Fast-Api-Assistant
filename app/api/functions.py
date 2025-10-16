@@ -65,7 +65,7 @@ def transcrire_audio(audio_bytes: io.BytesIO) -> str:
             texte = recognizer.recognize_google(audio_data, language="fr-FR")
         return texte
     except sr.UnknownValueError:
-        raise HTTPException(status_code=400, detail="Impossible de comprendre l'audio")
+        raise HTTPException(status_code=400, detail="Impossible de comprendre l'audio, essayez de parler plus clairement.")
     except sr.RequestError as e:
         raise HTTPException(status_code=500, detail=f"Erreur API: {e}")
     except Exception as e:
