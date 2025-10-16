@@ -80,8 +80,8 @@ async def create_completion(
     texte_transcrit = transcrire_audio(audio_bytes)
     audio_origine_base64 = compress_base64(audio_bytes.getvalue())
 
-    prompt = build_prompt(texte_transcrit, pre_prompt, history)
-    reponse = obtenir_reponse_llm(prompt, client)
+    prompt = build_prompt(pre_prompt, history)
+    reponse = obtenir_reponse_llm(prompt, texte_transcrit, client)
     audio_tts = synthese_vocale(reponse)
 
     return JSONResponse({
