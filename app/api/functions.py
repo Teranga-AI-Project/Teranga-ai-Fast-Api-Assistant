@@ -95,6 +95,7 @@ def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
     """
     hist = "\n".join(history[-10:])  # garder les 10 derniers échanges
     prompt = (
+        f"TRES IMPORTANT : Tu repond dans la langue du message actuelle  de l'utilisateur."
         f"{pre_prompt} "
         f"Historique récent:\n{hist}\n\n"
         f"Utilisateur: {message}\n"
