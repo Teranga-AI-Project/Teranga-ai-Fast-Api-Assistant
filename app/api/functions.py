@@ -71,10 +71,13 @@ def transcrire_audio(audio_bytes: io.BytesIO) -> str:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur de traitement audio: {e}")
 
-def obtenir_reponse_llm(texte_prompt: str, client: Groq) -> str:
+def obtenir_reponse_llm(instructions: str, message_utilisateur: str, client: Groq) -> str:
     try:
         completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": texte_prompt}],
+            messages=[
+                {"role": "system", "content": instructions},
+                {"role": "user", "content": message_utilisateur},    
+            ],
             model="llama-3.1-8b-instant",
             temperature=0.3,
             top_p=0.9,
@@ -88,7 +91,7 @@ def obtenir_reponse_llm(texte_prompt: str, client: Groq) -> str:
 def compress_base64(data: bytes) -> str:
     return base64.b64encode(gzip.compress(data)).decode()
 
-def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
+def build_prompt(pre_prompt: str, history: list[str]) -> str:
     """
     Construit le prompt pour LLaMA.
     L'humeur est fournie par l'utilisateur via l'interface.
@@ -98,8 +101,8 @@ def build_prompt(message: str, pre_prompt: str, history: list[str]) -> str:
         f"TRES IMPORTANT : Tu repond dans la langue du message actuelle  de l'utilisateur."
         f"{pre_prompt} "
         f"Historique récent:\n{hist}\n\n"
-        f"Utilisateur: {message}\n"
-        f"Mentor:"
+        # f"Utilisateur: {message}\n"
+        # f"Mentor:"
     )
     return prompt
 

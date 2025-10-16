@@ -51,8 +51,8 @@ async def chat_text(
     Authentification via clé API
     """
     user, api_key = user_and_key
-    prompt = build_prompt(request.message, request.pre_prompt, request.history)
-    reponse = obtenir_reponse_llm(prompt, client)
+    prompt = build_prompt(request.pre_prompt, request.history)
+    reponse = obtenir_reponse_llm(prompt, request.message, client)
     audio_tts = synthese_vocale(reponse)
     return JSONResponse({
         "texte_utilisateur": request.message,
